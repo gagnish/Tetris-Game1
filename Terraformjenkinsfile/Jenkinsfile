@@ -1,6 +1,6 @@
 properties([
     parameters([
-        string(defaultValue: 'variables.tfvars', description: 'Specify the file name', name: 'File-Name'),
+       // string(defaultValue: 'variables.tfvars', description: 'Specify the file name', name: 'File-Name'),
         choice(choices: ['apply', 'destroy'], description: 'Select Terraform action', name: 'Terraform-Action')
     ])
 ])
@@ -40,7 +40,7 @@ pipeline {
                 withAWS(credentials: 'aws-key', region: 'us-east-1') {
                 dir('Eks-terraform') {
                     script {
-                        sh "terraform plan -var-file=${params.'File-Name'}"
+                        sh "terraform plan"
                     }
                 }
                 }
@@ -54,9 +54,9 @@ pipeline {
                     dir('Eks-terraform') {
                         script {
                             if (params.'Terraform-Action' == 'apply') {
-                                sh "terraform apply -auto-approve -var-file=${params.'File-Name'}"
+                                sh "terraform apply -auto-approve"
                             } else if (params.'Terraform-Action' == 'destroy') {
-                                sh "terraform destroy -auto-approve -var-file=${params.'File-Name'}"
+                                sh "terraform destroy -auto-approve"
                             } else {
                                 error "Invalid value for Terraform-Action: ${params.'Terraform-Action'}"
                             }

@@ -6,8 +6,8 @@ pipeline{
     }
     environment {
         SCANNER_HOME=tool 'sonar-scanner'
-        GIT_REPO_NAME = "Tetris-Game1"
-        GIT_USER_NAME = "gagnish" 
+        GIT_REPO_NAME = 'Tetris-Game1'
+        GIT_USER_NAME = 'gagnish' 
     }
     stages {
         stage('clean workspace'){
@@ -67,21 +67,19 @@ pipeline{
                 sh "trivy image gagnish/tetrisv1:latest > trivyimage.txt" 
             }
         }    
-        stage('Update Deployment File') {
-           steps {
-            dir('src')
+        stage("Update Deployment File"){
+            steps{
+              dir('src')
                 script {
                     withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                        NEW_IMAGE_NAME = "gagnish/tetrisv1:latest"  
                        sh "sed -i 's|image: .*|image: $NEW_IMAGE_NAME|' deployment.yml"
                        sh 'git add deployment.yml'
                        sh "git commit -m 'Update deployment image to $NEW_IMAGE_NAME'"
-                       sh "git push @github.com/${GIT_USER_NAME}/${GIT_REPO_NAME">https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main"
-                    }
+                       sh "git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master"     
+                    } 
                 }
-               
-              }
-           }     
+            }     
         }
     }
 }

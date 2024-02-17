@@ -58,7 +58,7 @@ pipeline{
                        sh "docker build -t tetrisv1 ."
                        sh "docker tag tetrisv1 gagnish/tetrisv1:latest "
                        sh "docker push gagnish/tetrisv1:latest "
-                       sh "docker image prune"
+                       sh "docker image prune -af"
                     }
                 }
             }

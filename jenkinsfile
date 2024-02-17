@@ -81,6 +81,7 @@ pipeline{
             environment {
                 GIT_REPO_NAME = "Tetris-Game1"
                 GIT_USER_NAME = "gagnish"
+                GITHUB_TOKEN = "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"
             }
             //steps{
               //  dir("deploymentfile"){

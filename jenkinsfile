@@ -55,20 +55,33 @@ pipeline{
             steps{
                 script{
                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
+                       sh 'docker system prune -f'
+                       sh 'docker container prune -f'
                        sh "docker build -t tetrisv1 ."
-                       sh "docker tag tetrisv1 gagnish/tetrisv1:latest "
-                       sh "docker push gagnish/tetrisv1:latest "
-                       sh "docker image prune -af"
+                       sh 'docker tag tetrisv1 gagnish/tetrisv1:${BUILD_NUMBER}'
+                       sh 'docker push gagnish/tetrisv1:${BUILD_NUMBER}'
+                       
                     }
                 }
             }
         }
         stage("TRIVY"){
             steps{
-                sh "trivy image gagnish/tetrisv1:latest > trivyimage.txt" 
+                sh "trivy image avian19/tetrisv1:${BUILD_NUMBER} > trivyimage.txt" 
             }
-        }    
+        } 
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/gagnish/Tetris-Game1.git'
+            }
+        }
+
         stage("Update Deployment File"){
+            environment {
+                GIT_REPO_NAME = "Tetris-Game1"
+                GIT_USER_NAME = "gagnish"
+            }
             //steps{
               //  dir("deploymentfile"){
               //  script {
@@ -86,8 +99,9 @@ pipeline{
                             git config user.name "gagnish"
                             BUILD_NUMBER=${BUILD_NUMBER}
                             echo $BUILD_NUMBER
-                            NEW_IMAGE_NAME=${gagnish/tetrisv1:latest}
-                            sed -i 's|image: .*|image: ${NEW_IMAGE_NAME}|' deployment-service.yml
+                            imageTag=$(grep -oP '(?<=tetrisv1:)[^ ]+' deployment-service.yml)
+                            echo $imageTag
+                            sed -i "s/tetrisv1:${imageTag}/tetrisv1:${BUILD_NUMBER}/" deployment-service.yml
                             git add deployment-service.yml
                             git commit -m "Update deployment Image to version \${BUILD_NUMBER}"
                             git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master

@@ -83,9 +83,9 @@ pipeline{
                         sh '''
                             git config user.email "gagnishdhiman@gmail.com"
                             git config user.name "gagnish"
-                            NEW_IMAGE_NAME = "gagnish/tetrisv1:latest"
                             BUILD_NUMBER=${BUILD_NUMBER}
                             echo $BUILD_NUMBER
+                            NEW_IMAGE_NAME = "gagnish/tetrisv1:latest"
                             "sed -i 's|image: .*|image: $NEW_IMAGE_NAME|' deployment-service.yml
                             git add deployment-service.yml
                             git commit -m "Update deployment Image to version \${BUILD_NUMBER}"

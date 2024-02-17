@@ -67,7 +67,7 @@ pipeline{
         }
         stage("TRIVY"){
             steps{
-                sh "trivy image avian19/tetrisv1:${BUILD_NUMBER} > trivyimage.txt" 
+                sh "trivy image gagnish/tetrisv1:${BUILD_NUMBER} > trivyimage.txt" 
             }
         } 
 

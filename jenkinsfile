@@ -6,8 +6,8 @@ pipeline{
     }
     environment {
         SCANNER_HOME=tool 'sonar-scanner'
-        GIT_REPO_NAME = 'Tetris-Game1'
-        GIT_USER_NAME = 'gagnish' 
+        GIT_REPONAME = 'Tetris-Game1'
+        GIT_USERNAME = 'gagnish' 
     }
     stages {
         stage('clean workspace'){
@@ -79,8 +79,8 @@ pipeline{
 
         stage("Update Deployment File"){
             environment {
-                GIT_REPO_NAME = "Tetris-Game1"
-                GIT_USER_NAME = "gagnish"
+                GIT_REPONAME = "Tetris-Game1"
+                GIT_USERNAME = "gagnish"
                 GITHUB_TOKEN = "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"
             }
             //steps{
@@ -94,7 +94,8 @@ pipeline{
                      //  sh "git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master"     
             steps {
                  dir('deploymentfile') {
-                    withCredentials([string(credentialsId: 'github1', variable: 'GITHUB_TOKEN')]) {
+                    		//withCredentials([usernamePassword(credentialsId: 'github1', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                            withCredentials([string(credentialsId: 'github1', variable: 'GITHUB_TOKEN')]) {
                         sh '''
                             git config user.email "gagnishdhiman@gmail.com"
                             git config user.name "gagnish"
@@ -106,7 +107,7 @@ pipeline{
                             sed -i "s/tetrisv1:${imageTag}/tetrisv1:${BUILD_NUMBER}/" deployment-service.yml
                             git add deployment-service.yml
                             git commit -m "Update deployment Image to version \${BUILD_NUMBER}"
-                            git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                            git push https://${GITHUB_TOKEN}@github.com/${GIT_USERNAME}/${GIT_REPONAME}.git HEAD:main -f
                         '''
                     } 
                 }

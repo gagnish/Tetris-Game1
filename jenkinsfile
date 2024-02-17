@@ -86,7 +86,7 @@ pipeline{
                             BUILD_NUMBER=${BUILD_NUMBER}
                             echo $BUILD_NUMBER
                             NEW_IMAGE_NAME = "gagnish/tetrisv1:latest"
-                            "sed -i 's|image: .*|image: $NEW_IMAGE_NAME|' deployment-service.yml
+                            sed -i 's|image: .*|image: $NEW_IMAGE_NAME|' deployment-service.yml
                             git add deployment-service.yml
                             git commit -m "Update deployment Image to version \${BUILD_NUMBER}"
                             git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master

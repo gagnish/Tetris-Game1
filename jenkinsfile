@@ -69,7 +69,6 @@ pipeline{
         }    
         stage("Update Deployment File"){
             steps{
-              dir('src')
                 script {
                     withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                        NEW_IMAGE_NAME = "gagnish/tetrisv1:latest"  

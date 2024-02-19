@@ -97,7 +97,15 @@ pipeline{
                  dir('deploymentfile') {
                     		//withCredentials([usernamePassword(credentialsId: 'github1', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                            // withCredentials([string(credentialsId: 'github1', variable: 'GITHUB_TOKEN')]) {
-                            withCredentials([sshUserPrivateKey(credentialsId: '1b62bf8e-9502-4194-a254-29188cee06d3', keyFileVariable: 'github')]){
+                          //  withCredentials([sshUserPrivateKey(credentialsId: '1b62bf8e-9502-4194-a254-29188cee06d3', keyFileVariable: 'github')]){
+
+                            checkout(
+                    [$class: 'GitSCM', 
+                    branches: [[name: 'main']], 
+                    userRemoteConfigs: [[credentialsId: 'github', 
+                    url: 'git@github.com:gagnish/Tetris-Game1.git']]
+                    ]
+                    )
                         sh '''
                             git config user.email "gagnishdhiman@gmail.com"
                             git config user.name "gagnish"

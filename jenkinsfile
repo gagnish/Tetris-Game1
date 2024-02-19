@@ -109,7 +109,7 @@ pipeline{
                             sed -i "s/tetrisv1:${imageTag}/tetrisv1:${BUILD_NUMBER}/" deployment-service.yml
                             git add deployment-service.yml
                             git commit -m "Update deployment Image to version \${BUILD_NUMBER}" 
-                            git push git@github.com:${GIT_USERNAME}/${GIT_REPONAME}.git HEAD:main -f
+                            git push https://github.com/gagnish/Tetris-Game1.git HEAD:main -f
                         '''
                     } 
                 }

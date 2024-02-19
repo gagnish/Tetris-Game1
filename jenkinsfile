@@ -8,6 +8,7 @@ pipeline{
         SCANNER_HOME=tool 'sonar-scanner'
         GIT_REPONAME = 'Tetris-Game1'
         GIT_USERNAME = 'gagnish' 
+        GITHUB_TOKEN = credentials('github1')
     }
     stages {
         stage('clean workspace'){
@@ -81,7 +82,7 @@ pipeline{
             environment {
                 GIT_REPONAME = "Tetris-Game1"
                 GIT_USERNAME = "gagnish"
-                GITHUB_TOKEN = "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"
+            //    GITHUB_TOKEN = "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"
             }
             //steps{
               //  dir("deploymentfile"){
@@ -95,7 +96,8 @@ pipeline{
             steps {
                  dir('deploymentfile') {
                     		//withCredentials([usernamePassword(credentialsId: 'github1', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                            withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+                           // withCredentials([string(credentialsId: 'github1', variable: 'GITHUB_TOKEN')]) {
+                            withCredentials([sshUserPrivateKey(credentialsId: '1b62bf8e-9502-4194-a254-29188cee06d3', keyFileVariable: 'github')]){
                         sh '''
                             git config user.email "gagnishdhiman@gmail.com"
                             git config user.name "gagnish"
@@ -106,8 +108,8 @@ pipeline{
                             echo $imageTag
                             sed -i "s/tetrisv1:${imageTag}/tetrisv1:${BUILD_NUMBER}/" deployment-service.yml
                             git add deployment-service.yml
-                            git commit -m "Update deployment Image to version \${BUILD_NUMBER}"
-                            git push https://${GITHUB_TOKEN}@github.com/${GIT_USERNAME}/${GIT_REPONAME}.git HEAD:main -f
+                            git commit -m "Update deployment Image to version \${BUILD_NUMBER}" 
+                            git push git@github.com:${GIT_USERNAME}/${GIT_REPONAME}.git HEAD:main -f
                         '''
                     } 
                 }

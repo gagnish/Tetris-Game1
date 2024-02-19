@@ -95,7 +95,7 @@ pipeline{
             steps {
                  dir('deploymentfile') {
                     		//withCredentials([usernamePassword(credentialsId: 'github1', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                            withCredentials([string(credentialsId: 'github1', variable: 'GITHUB_TOKEN')]) {
+                            withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                         sh '''
                             git config user.email "gagnishdhiman@gmail.com"
                             git config user.name "gagnish"
